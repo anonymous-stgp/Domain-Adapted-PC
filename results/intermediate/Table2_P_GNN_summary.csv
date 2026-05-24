@@ -1,0 +1,3 @@
+method,year,avg_rmse,total_runtime_sec,n_turbines
+STGNN_LOO_FixedKNN7_Train2017_PredictALL,2017,4.0715,49897.83,66
+STGNN_LOO_FixedKNN7_Train2017_PredictALL,2018,4.0714,18149.79,62

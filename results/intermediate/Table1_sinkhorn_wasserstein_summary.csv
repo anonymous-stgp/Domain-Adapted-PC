@@ -1,0 +1,3 @@
+metric,year,avg_rmse,avg_mae,total_runtime_sec
+sinkhorn_wasserstein,2017,3.35504888720226,2.14382098885149,21996.048
+sinkhorn_wasserstein,2018,3.59317774310429,2.30469025589306,20822.544

@@ -1,0 +1,8 @@
+file
+pairwise_matching_2017_dfp.csv
+pairwise_geographic_distance_dfp.csv
+matching_weighted_ks_dfp.csv
+matching_mean_ks_dfp.csv
+matching_marginal_energy_dfp.csv
+matching_sinkhorn_wasserstein_dfp.csv
+matching_geographic_distance_dfp.csv

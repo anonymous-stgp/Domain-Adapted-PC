@@ -1,0 +1,3 @@
+method,year,avg_rmse,total_runtime_sec
+P_Binning,2017,4.56631925494197,79.945
+P_Binning,2018,4.62379324740929,73.9270000000001

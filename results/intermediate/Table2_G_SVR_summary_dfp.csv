@@ -1,0 +1,3 @@
+method,year,avg_rmse,total_runtime_sec
+G_SVR,2017,3.83149216942912,2388.25
+G_SVR,2018,5.04651892908415,2380.874

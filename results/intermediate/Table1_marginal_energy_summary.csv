@@ -1,0 +1,3 @@
+metric,year,avg_rmse,avg_mae,total_runtime_sec
+marginal_energy,2017,3.80506003244926,2.57490172652078,22249.157
+marginal_energy,2018,3.94874265918789,2.63468208097329,20657.281
