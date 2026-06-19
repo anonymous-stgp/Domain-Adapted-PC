@@ -43,9 +43,9 @@ Our transfer learning approach selects source data based on a supervised Weighte
 
 Transfer learning (WD-based, K=7):
 - thinnedSV (R)
-- thinned twinGP (R) — computed as part of `Table1.R` / `Table1_dfp.R` (weighted_ks metric)
+- thinned twinGP (R) — computed as part of `Table1.R` / `Table1_dfp.R` (WD metric)
 - ANN (Python)
-- XGBoost (Python)
+- XGBoost (R)
 
 Geographic-neighbor transfer (K=7):
 - ANN (Python)
@@ -68,7 +68,7 @@ The **distant farm planning (DFP)** experiment uses only the **Transfer learning
 
 We do not provide code for **STGP** or the **BHM (Bayesian Hierarchical Model)** method in this repository:
 
-- STGP results are taken from a separate paper/repository and are included in `compile_results.py` as hardcoded reference values for comparison only.
+- STGP results are taken from a separate paper and are included in `compile_results.py` as hardcoded reference values for comparison only.
 - BHM is implemented in a separate repository: https://github.com/TAMU-AML/BHM-Terrain-Paper. BHM is also significantly slower than the other methods considered in this paper, so it is not reproduced here.
 
 Both STGP and BHM values are hardcoded as constants at the top of `compile_results.py` (see `HARDCODED_VALUES`). Edit those constants directly if the source numbers are updated.
@@ -119,8 +119,8 @@ STGP-Terrain-Aware-Power-Curve/
 │   ├── Table2_TF_thinned_SV_dfp.R
 │   ├── Table2_TF_ANN.py
 │   ├── Table2_TF_ANN_dfp.py
-│   ├── Table2_TF_XGBoost.py
-│   ├── Table2_TF_XGBoost_dfp.py
+│   ├── Table2_TF_XGBoost.R
+│   ├── Table2_TF_XGBoost_dfp.R
 │   │
 │   ├── G_thinned_twinGP.R
 │   ├── G_thinned_twinGP_dfp.R
@@ -130,7 +130,7 @@ STGP-Terrain-Aware-Power-Curve/
 │   ├── Table2_G_rf_dfp.R
 │   ├── Table2_G_SVR.R
 │   ├── Table2_G_SVR_dfp.R
-│   ├── Table2_G_XGBoost.R             # LOTO geographic-neighbor XGBoost
+│   ├── Table2_G_XGBoost.R            
 │   ├── Table2_G_XGBoost_dfp.R
 │   │
 │   ├── P_thinned_twinGP.R
@@ -156,7 +156,7 @@ STGP-Terrain-Aware-Power-Curve/
 └── README.md
 ```
 
-> **Note:** `Table2_P_ANN.py`, `Table2_G_ANN.py`/`_dfp.py`, `Table2_TF_ANN.py`/`_dfp.py`, and `Figure5_ann.py` use a Keras/TensorFlow feedforward network (8-16-8, ReLU, Adam). All other Python scripts that fit standard models (XGBoost, GNN) use scikit-learn / LightGBM / PyTorch as appropriate; see each script's imports.
+> **Note:** All Python scripts that fit standard models (XGBoost, GNN) use scikit-learn / LightGBM / PyTorch as appropriate; see each script's imports.
 
 **data/**
 Contains turbine SCADA datasets, terrain features, turbine location data, and processed datasets. The processed data includes turbine selection based on different matching metrics.
@@ -208,7 +208,7 @@ If you only want to run a subset of the methods, you can comment out the corresp
 
 **Note:** Several scripts have been substantially rewritten since these runtimes were last measured (e.g., the ANN scripts now use Keras/TensorFlow instead of scikit-learn, and the twinGP scripts were restructured into standalone `G_thinned_twinGP.R` / `P_thinned_twinGP.R` files). Runtimes for those updated scripts are left blank below until re-measured; all other entries reflect the original measurements.
 
-Matching takes 40 minutes. The runtime for **Table 2** is approximately **49 hours**.
+Matching takes 40 minutes. The runtime for **Table 2** is approximately **49 hours**.  The runtime for **Figure 5** is approximately **115 hours**.
 
 ### Table 3
 
@@ -216,13 +216,17 @@ Method | Runtime
 ------ | -------
 TF_thinned_SV | 3 hours
 TF_thinned_twinGP | already computed in Table 2
-TF_ANN |
+TF_ANN | 4 hours
+TF_XGBoost |  1 minute
+G_ANN | 4 hours
+G_thinned_twinGP | 12 hours
 G_SVR | 1 hour
 G_XGBoost | 1 minute
 G_random_forest | 4 minutes
-P_GNN | 1.5 hours
+P_ANN | 41 hours
+P_thinned_twinGP | 36 hours
 P_XGBoost | 1 minute
-P_thinned_twinGP |
+P_GNN | 1.5 hours
 P_Binning | 1 minute
 **Total** |
 
@@ -232,16 +236,18 @@ Method | Runtime
 ------ | -------
 TF_thinned_SV | 29 hours
 TF_thinned_twinGP | already computed in Table 2
-TF_ANN |
+TF_ANN | 25 minutes
+TF_XGBoost |  2 minutes
+G_ANN | 30 minutes
+G_thinned_twinGP | 2 hours
 G_SVR | 14 hours
 G_XGBoost | 2 minutes
 G_random_forest | 15 minutes
 **Total** |
 
-
 ### Total Runtime
 
-The total runtime for reproducing **Table 3** and **Table 4** is approximately **TBD** (see note above).
+The total runtime for reproducing **Table 3** and **Table 4** is approximately **103 and 46 hours**, respectively (~149 hours combined).
 
 If you only want to run a subset of the methods, you can comment out the corresponding method blocks in the files:
 
