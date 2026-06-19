@@ -17,9 +17,7 @@ dir.create(RESULTS_DIR, recursive = TRUE, showWarnings = FALSE)
 
 source(file.path(CODE_DIR, "thinnedsv_source.R"))
 
-DONOR_FILE     <- file.path(PROCESSED_DIR, "matching_weighted_ks.csv")
-OUTPUT_DETAIL  <- file.path(RESULTS_DIR,   "Table2_TF_thinnedSV_detail.csv")
-OUTPUT_SUMMARY <- file.path(RESULTS_DIR,   "Table2_TF_thinnedSV_summary.csv")
+DONOR_FILE <- file.path(PROCESSED_DIR, "matching_weighted_ks.csv")
 
 TARGET             <- "power"
 BASE_FEATURES      <- c("wind_speed", "temperature", "turbulence_intensity", "std_wind_direction")
@@ -28,6 +26,27 @@ K                  <- 7L
 SEED               <- 2026L
 MAX_THINNING_NUMBER <- 20L
 YEARS_TEST         <- c(2017L, 2018L)
+
+# ─────────────────────────────────────────
+# CLI ARG: turbine range "start:end" (e.g. "1:22"). Default = all.
+# ─────────────────────────────────────────
+
+args <- commandArgs(trailingOnly = TRUE)
+
+TURBINE_RANGE <- if (length(args) >= 1L) {
+  parts <- as.integer(strsplit(args[1], ":")[[1]])
+  if (length(parts) == 2L) seq(parts[1], parts[2]) else NULL
+} else {
+  NULL
+}
+RANGE_TAG <- if (!is.null(TURBINE_RANGE)) {
+  sprintf("_t%dto%d", min(TURBINE_RANGE), max(TURBINE_RANGE))
+} else {
+  ""
+}
+
+OUTPUT_DETAIL  <- file.path(RESULTS_DIR, sprintf("Table2_TF_thinnedSV%s_detail.csv",  RANGE_TAG))
+OUTPUT_SUMMARY <- file.path(RESULTS_DIR, sprintf("Table2_TF_thinnedSV%s_summary.csv", RANGE_TAG))
 
 mae_vec  <- function(y, yhat) mean(abs(y - yhat))
 rmse_vec <- function(y, yhat) sqrt(mean((y - yhat)^2))
@@ -152,6 +171,9 @@ run_metric <- function() {
   donor_dt   <- donor_obj$dt
   donor_cols <- donor_obj$donor_cols
   targets    <- sort(unique(donor_dt$target))
+  if (!is.null(TURBINE_RANGE)) {
+    targets <- targets[targets %in% TURBINE_RANGE]
+  }
   n_targets  <- length(targets)
   
   # --- resume: skip already-done (target, year) pairs ---
